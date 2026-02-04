@@ -249,7 +249,57 @@ Como resultado del proceso se generan:
 
 ## 7. Resultados y Conclusiones
 
+En este proyecto se ha realizado un análisis exploratorio que permitie comprender la estructura del dataset y detectar patrones relevantes antes de desarrollar los modelos. A nivel descriptivo, las variables numéricas muestran comportamientos coherentes con el contexto académico y, en general, no se observaron inconsistencias graves en rangos. Las visualizaciones univariantes y bivariantes ayudan a identificar qué variables aportan mayor información respecto al rendimiento final.
 
+En el estudio de relaciones con la variable objetivo de regresión `nota_final`, se observa que las variables más informativas son **horas de estudio semanal**, **nota previa** y **tasa de asistencia**. Esto se refleja tanto en las visualizaciones gráficas, como en los análisis numéricos de correlación, donde estas variables mantienen asociaciones positivas más consistentes con el rendimiento.
+
+En cambio, variables como **edad** muestran una relación prácticamente nula con el rendimiento obtenido, por lo que su aportación al modelo se esperaba que fuera limitada. **Horas de sueño** presenta una asociación débil, indicando que, en el dataset, su contribución parece menor en comparación con variables más directamente ligadas al estudio, que son las que explican mejor las relaciones observadas en el rendimiento.
+
+Para la variable objetivo de clasificación `aprobado`, el EDA también evidencia la importancia de estudiar el balance de clases. Se identifica un desbalance marcado con predominio de aprobados, lo que implica que métricas como la **accuracy** pueden resultar engañosas si el modelo aprende a predecir mayoritariamente la clase positiva. Por este motivo, el proyecto incorpora métricas complementarias y análisis por clase como la **matriz de confusión** y la **classification report**, para evaluar la utilidad real del clasificador.
+
+En conjunto, el EDA nos permite tomar decisiones de preprocesamiento con criterio y nos muestra que la regresión puede apoyarse en relaciones relativamente estables, mientras que la clasificación requiere mayor atención por el existente desbalanceo de clases y por el intercambio entre captar más suspensos o reducir errores de clasificación.
+
+El preprocesamiento se diseña con un enfoque reproducible y profesional mediante **Pipeline** y **ColumnTransformer**, separando tratamientos para variables numéricas y categóricas. Esto permite asegurar consistencia entre experimentos, especialmente durante las fases de modelado, y evitar fuga de información al ajustar transformaciones únicamente con el conjunto de entrenamiento.
+
+Variables numéricas se tratan mediante imputación por mediana como estrategia robusta y posteriormente escalado con **StandardScaler**, útil para modelos lineales y regularizados, mientras que a las variables categóricas se les aplica una imputación con valor constante y codificación mediante **One-Hot Encoding**, transformando las categorías en variables binarias y permitiendo que los modelos trabajen con un formato totalmente numérico.
+
+La preparación del split, se realiza mediante la partición de train y test para regresión y para clasificación. En clasificación se utiliza una división estratificada para mantener la proporción de clases y evitar que el desbalance se agrave en train o test. A continuación como verificación técnica, se procede a comprobar el aumento de dimensionalidad tras aplicar el **One-Hot Encoding**, confirmando que el preprocesamiento transforma correctamente el dataset a un formato apto para modelos de machine learning.
+
+En la fase de **regresión**, el objetivo se enfoca en predecir `nota_final` con un proceso de comparación progresivo, mediante un baseline, un modelo lineal y un modelo regularizado.
+
+El **baseline** se utiliza como referencia mínima, su rendimiento es claramente bajo, con un **R²** cercano a **0** o **negativo**, lo que indica que el modelo no explica la variabilidad del objetivo y que prácticamente se limita a predecir un valor promedio. Su función en el proyecto es establecer un punto de partida para validar que los modelos posteriores realmente aportan mejora.
+
+La **regresión lineal** supone una mejora clara frente al **baseline**. Las métricas en **train** y **test** son relativamente consistentes, lo que sugiere que el modelo generaliza de forma razonable. El modelo consige un **R²** en torno a **0.35** y **0.40**, mostrando que parte del rendimiento académico sí puede explicarse con las variables disponibles, aunque también existe una fracción importante no capturada, esto puede deberse a posibles variables no incluidas, ruido o relaciones no lineales.
+
+El modelo final seleccionado tras el ajuste del hiperparametro **alpha** con validación cruzada es **Ridge**, ya que la regularización permitió estabilizar los coeficientes y mejorar ligeramente la generalización, obteniendo valores finales consistentes con un **MAE** de **5.846**, un **RMSE** de **7.206** y un **R²** de **0.365**, lo que nos indica que en promedio el error absoluto en la predicción de la nota final ronda los **6 puntos**, y que el modelo logra explicar aproximadamente un **36.5%** de la variabilidad de `nota_final`. Además, los gráficos de diagnóstico muestran un comportamiento razonable, los errores se distribuyen alrededor de cero sin patrones extremos dominantes, aunque sigue existiendo dispersión, especialmente en ciertos rangos de nota, lo que sugiere límites naturales del modelo lineal para capturar toda la complejidad del rendimiento.
+
+Como resultado, se guarda el modelo final como `0.1_modelo_regresion_ridge.pkl`, incluyendo el Pipeline completo, permitiendo reproducir el mismo preprocesamiento y predicción con datos nuevos.
+
+En la fase de **clasificación** tiene como objetivo predecir `aprobado`, con especial atención al desbalance entre clases y al análisis del rendimiento por clase.
+
+El baseline alcanza una **accuracy** alta debido a que predice siempre la clase mayoritaria. Sin embargo, este resultado no implica capacidad real de discriminación, ya que tenemos un dataset con muchos aprobados, acertar “aprobado” casi siempre da una **accuracy** elevada aunque el modelo sea inútil para detectar suspensos, por esta razón se utiliza únicamente como referencia.
+
+Eln el modelo de **regresión logística** se incorpora la **class_weight**=**"balanced"** para compensar el desbalance, a diferencia del **baseline**, el modelo muestra capacidad real de separación, lo que se reflejada en **ROC-AUC** con un valor de **0.802** en test.
+Este valor indica que el ranking de probabilidades es claramente mejor que el azar y que el modelo distingue razonablemente entre aprobados y suspensos.
+
+Al revisar el **classification report**, se observa un rendimiento alto en la clase mayoritaria **aprobado**, mientras que la clase minoritaria **suspenso** presentó métricas más bajas, esto es esperable en un escenario desbalanceado, ya que mejorar la detección de suspensos suele implicar el aumento de falsos positivos.
+
+Para profundizar en el comportamiento del clasificador, se construye una tabla de umbrales evaluando métricas para ambas clases, esto permite visualizar cómo cambia el modelo cuando se vuelve más estricto o más permisivo a la hora de asignar la clase **aprobado**.
+Con el umbral seleccionado de **0.40**, el modelo mantiene un rendimiento muy alto para aprobados y minimiza falsas alarmas de suspenso, con un **precision** de **suspenso** de **0.80**, un **recall** de **suspenso** de **0.20**, lo que significa que cuando el modelo predice suspenso suele acertar, pero detecta pocos suspensos reales. Esta es una decisión conservadora que prioriza el intentar evitar clasificar **aprobados** como **suspenso**, lo que aumenta la **accuracy** global pero limita la sensibilidad hacia la clase minoritaria. 
+
+Para finalizar este bloque deja documentado la clasificación desbalanceada y permitie justificar con datos el umbral final seleccionado, procediendose a guardar las dos versiones del modelo, como `0.2_modelo_clasificacion_logreg.pkl` para el modelo base entrenado con logística y `0.3_modelo_clasificacion_logreg_threshold.pkl` para el modelo con el umbral final incorporado.
+
+Para concluir podemos decir que el rendimiento académico en este dataset está principalmente asociado a **horas de estudio**, **nota previa** y **asistencia**, lo que es coherente con un contexto educativo y se confirma tanto en el EDA como en el modelado.
+
+En **regresión**, los modelos lineales explican una parte moderada del rendimiento, y la regularización ofrece un equilibrio estable con errores medios alrededor de **6 puntos** en la predicción de la nota final.
+
+En clasificación, el desbalance de clases obliga a evaluar más allá de la **accuracy**, mientras que la regresión logística logra buena discriminación global con un **ROC-AUC** de **0.802**, pero la detección de suspensos sigue siendo la parte más difícil.
+
+El ajuste de umbral es clave para decidir qué se prioriza, si detectar más suspensos o reducir falsas alarmas mejorando el rendimiento global, durante el proyecto se justifica esta decisión y se selecciona un umbral final coherente con el criterio aplicado.
+
+El uso de **Pipelines** y **ColumnTransformer** garantiza un flujo reproducible, ya que reduce errores y permite entrenar y aplicar modelos de forma consistente.
+
+En conjunto, el proyecto cubre todas las etapas del flujo de **machine learning** y deja el repositorio preparado para reproducir el análisis, entrenar los modelos y revisar los resultados.
 
 ## 8. Contribuciones
 
