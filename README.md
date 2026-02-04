@@ -1,5 +1,5 @@
 
-# titulo
+# Machine Learning aplicado al rendimiento académico: EDA y modelado predictivo
 
 ## 1.  Introducción
 
@@ -137,11 +137,11 @@ pip install -r requirements.txt
 
 Como resultado del proceso se generan:
 
-- `models/modelo_regresion_ridge.pkl`
+- `models/0.1_modelo_regresion_ridge.pkl`
 
-- `models/modelo_clasificacion_logreg.pkl`
+- `models/0.2_modelo_clasificacion_logreg.pkl`
 
-- `models/modelo_clasificacion_logreg_threshold.pkl`
+- `models/0.3_modelo_clasificacion_logreg_threshold.pkl`
 
 ## 6. Recap Sesiones
 
@@ -245,7 +245,7 @@ Como resultado del proceso se generan:
 
 - Inclusión del apartado de instalación y reproducción, indicando el orden de ejecución de los notebooks y los archivos generados.
 
-- Revisión final de formato y coherencia del repositorio para la entrega en GitHub.
+- Revisión final de formato y del repositorio para la entrega en GitHub.
 
 ## 7. Resultados y Conclusiones
 
