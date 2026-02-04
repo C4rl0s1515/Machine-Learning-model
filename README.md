@@ -1,7 +1,7 @@
 
 # Machine Learning aplicado al rendimiento académico: EDA y modelado predictivo
 
-## 1.  Introducción
+## 1. 📝 Introducción
 
 Este repositorio contiene un proyecto completo de análisis y modelado predictivo aplicado al rendimiento académico de un grupo de estudiantes, con el objetivo de identificar los factores más relevantes asociados a la obtención de resultados positivios, y así poder desarrollar dos modelos que sean capaces, de predecir la calificación final y clasificar si el estudiante aprueba o suspende. 
 
@@ -15,7 +15,7 @@ Posteriormente, se aborda el modelado en dos bloques. Por un lado, se entrena y 
 
 Por otro lado, se entrena y valida un modelo de **clasificación** para predecir `aprobado`, evaluando el impacto del desbalance de clases mediante métricas adecuadas y analizando el efecto del ajuste de umbral para controlar el compromiso entre detectar suspensos y minimizar falsos resultados. Finalmente, se guardan los modelos entrenados para su reutilización y se procede a documentar las conclusiones y decisiones tomadas a lo largo del proceso.
 
-## **2. Objetivos del Análisis**
+## **2. ✅ Objetivos del Análisis**
 
 ### Objetivo general
 
@@ -35,7 +35,7 @@ Realizar un análisis completo del rendimiento académico de un grupo de estudia
 
 - ***Modelado de clasificación***: Se entrenan, validan y comparan los modelos para predecir el `aprobado`, considerando el desbalance de clases mediante métricas adecuadas, además se evalua el comportamiento del modelo con curvas ROC/PR, matriz de confusión y, si es necesario, se ajuste eñ umbral para analizar el compromiso entre detectar suspensos y minimizar falsas alarmas.
 
-## 3. Estructura del Proyecto
+## 3. ⚙️ Estructura del Proyecto
 
 ```
 |------ data # Carpeta que contiene los datos utilizados en el proyecto.
@@ -54,7 +54,7 @@ Realizar un análisis completo del rendimiento académico de un grupo de estudia
 |------ requirements.txt # Listado de dependencias necesarias para instalar el entorno y reproducir el proyecto.    
 ```
 
-## 4. Descripción del Conjunto de Datos
+## 4. 📌 Descripción del Conjunto de Datos
 
 El conjunto de datos `dataset_estudiantes.csv` recoge información del rendimiento académico de un grupo de estudiantes junto con variables relacionadas con sus hábitos y entorno de estudio, con el objetivo de analizar qué factores se asocian con el desempeño y apoyar la construcción de modelos predictivos. A continuación se describen las variables incluidas en el análisis exploratorio.
 
@@ -82,7 +82,7 @@ El conjunto de datos `dataset_estudiantes.csv` recoge información del rendimien
 
 - Para clasificación: **aprobado** (variable binaria: 1 si la nota es ≥ 60, y 0 en caso contrario)
 
-## 5. Instalación, requisitos y reproducción del proyecto
+## 5. 💾 Instalación, requisitos y reproducción del proyecto
 
 #### **5.1 Requisitos**
 
@@ -143,7 +143,7 @@ Como resultado del proceso se generan:
 
 - `models/0.3_modelo_clasificacion_logreg_threshold.pkl`
 
-## 6. Recap Sesiones
+## 6. 📁 Recap Sesiones
 
 **Sesión 1**
 
@@ -247,7 +247,7 @@ Como resultado del proceso se generan:
 
 - Revisión final de formato y del repositorio para la entrega en GitHub.
 
-## 7. Resultados y Conclusiones
+## 7. 📊 Resultados y Conclusiones
 
 En este proyecto se ha realizado un análisis exploratorio que permitie comprender la estructura del dataset y detectar patrones relevantes antes de desarrollar los modelos. A nivel descriptivo, las variables numéricas muestran comportamientos coherentes con el contexto académico y, en general, no se observaron inconsistencias graves en rangos. Las visualizaciones univariantes y bivariantes ayudan a identificar qué variables aportan mayor información respecto al rendimiento final.
 
@@ -301,11 +301,11 @@ El uso de **Pipelines** y **ColumnTransformer** garantiza un flujo reproducible,
 
 En conjunto, el proyecto cubre todas las etapas del flujo de **machine learning** y deja el repositorio preparado para reproducir el análisis, entrenar los modelos y revisar los resultados.
 
-## 8. Contribuciones
+## 8. 🖊️ Contribuciones
 
 Cualquier contribucion es bien venida, si quiere colaborar en el proyecto, abre un pull request.
 
-## 9 Autores
+## 9. 💻 Autores
 
 Carlos Hernando
 
